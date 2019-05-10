@@ -1,111 +1,146 @@
-var Word = require("./word.js");
 var inquirer = require("inquirer");
-var colors = require("colors");
+
+var Word = require("./Word.js");
+var colors = require('colors');
 
 var guesses = 8;
 var points = 0;
 
-var wordsToGuess = ["Boston Red Sox", "New England Patriots", "Boston Bruins", "Boston Celtics", "New England Revolution"];
+var wordsToGuess = [
+    "Atlanta Falcons","Arizona Cardinals","Baltimore Ravens","Buffalo Bills","Carolina Panthers",
+    "Chicago Bears", "Cincinnati Bengals","Cleveland Browns","Dallas Cowboys","Denver Broncos",
+    "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts","Jacksonville Jaquars",
+    "Kansas City Chiefs", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins", "Minnesota Vikings",
+    "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets", "Oakland Raiders",
+    "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks",
+    "Tampa Bay Buccaneers", "Tennessee Titans", "Washington Redskins"];
 var randomWord;
 var chosenWord;
 
 function startGame() {
-    console.log("Try to guess the sports team name".green);
+
+    console.log("Guess the NFL Team".blue);
 }
 
-function chooseRandomWord(){
+function chooseRandomWord() {
+
     randomWord = wordsToGuess[Math.floor(Math.random() * wordsToGuess.length)]
+
     chosenWord = new Word(randomWord);
 }
 
 function guessWord() {
-    if (guesses > 0 && points < 5) {
-        console.log(chosenWord.display().blue);
 
+    if (guesses > 0 && points < 5) {
+
+        console.log(chosenWord.display().green);
+        
         inquirer.prompt([
             {
-            name: "txt",
-            message: "Guess a letter",
-            validate: function(str){
-                if(str.length != 1) return false;
-                var regEx = new RegExp("^[a-zA-Z\s]{1,1}$");
-                return regEx.test(str);
+                name: "txt",
+                message: "Guess a letter!".magenta,
+                validate: function (str) {
+                    if (str.length != 1) return false;
+                    var regEx = new RegExp("^[a-zA-Z\s]{1,1}$");
+                    return regEx.test(str);
                 }
+
             }
-        ]).then (function (guessedLetter) {
+
+        ]).then(function (guessedLetter) {
+
             var guess = guessedLetter.txt;
+
             chosenWord.checkGuess(guess);
 
-            if(randomWord.toLowerCase().indexOf(guess.toLowerCase()) === -1) {
-                guesses--
-                console.log("INCORRECT!" + guesses + "guesses left.".red);
-            } else {
-                if(points < 5) {
-                    console.log("CORRECT!".green);
+            if (randomWord.toLowerCase().indexOf(guess.toLowerCase()) === -1) {
+                guesses--;
+                console.log("INCORRECT! " + guesses + " guesses remaining".red)
+            } 
+            else {
+                if (points < 5) {
+                console.log("CORRECT!".green)
                 }
             }
-
+            
             if (randomWord === chosenWord.display()) {
-                console.log(chosenWord.dsiplay().blue);
-                guesses = 10;
-                point++
+                
+                console.log(chosenWord.display());
+                guesses = 8;
+                points++;
 
-                if(points < 5) {
-                    console.log("CORRECT. Next Team".green);
+                if (points < 5) {
+                    console.log("CORRECT! Next team!".green);
+                    console.log("You have " + points + " point(s)!");
                     chooseRandomWord();
-                } else {
+                }
+
+                else {
                     winGame();
                 }
             }
+
+            if (guesses === 0) {
+                loseGame();
+            }
+
             guessWord();
+
         });
     }
+
 }
 
 function loseGame() {
-    console.log("GAME OVER".red);
+    console.log(("GAME OVER!").red);
     inquirer.prompt([
         {
             name: "confirm",
             type: "confirm",
-            message: "Play Again?",
+            message: "Play again?",
             default: true
         }
-    ]).then(function(inquirerResponse){
-        if (inquirerResponse.comfirm) {
-            guesses = 8;
-            points = 0;
-            chooseRandomWord();
-            guessWord();
-        } else {
-            console.log("OK, I did not get your response".grey)
-            process.exit();
-
-        }
-    })
+    ])
+        .then(function (inquirerResponse) {
+            if (inquirerResponse.confirm) {
+                guesses = 10;
+                points = 0;
+                chooseRandomWord();
+                guessWord();
+            }
+            else {
+                console.log("Ok, thanks for plahying".blue);
+                process.exit();
+            }
+        })
 }
 
 function winGame() {
-    console.log("YOU WIN!!!!".green);
+
+    console.log('YOU WIN!');
+        
+
+
     inquirer.prompt([
         {
             name: "confirm",
             type: "confirm",
-            message: "Play Again?",
+            message: "Play again?",
             default: true
         }
-    ]).then(function(inquirerResponse){
-        if (inquirerResponse.comfirm) {
-            guesses = 8;
-            points = 0;
-            chooseRandomWord();
-            guessWord();
-        } else {
-            console.log("OK, Have a nice day".purple)
-            process.exit();
-
-        }
-    })
+    ])
+        .then(function (inquirerResponse) {
+            if (inquirerResponse.confirm) {
+                guesses = 10;
+                points = 0;
+                chooseRandomWord();
+                guessWord();
+            }
+            else {
+                console.log("You did an amazing job, come back and play again sometime.".blue)
+                process.exit();
+            }
+        })
 
 }
 
