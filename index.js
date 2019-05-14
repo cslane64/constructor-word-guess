@@ -62,8 +62,11 @@ function guessWord() {
                 console.log("CORRECT!".green)
                 }
             }
+            // replaced single space with double space so formating
+            // done in letter.js matched the random word for a win.
             
-            if (randomWord === chosenWord.display()) {
+            var randomWordMod = randomWord.replace(" ", "  ");
+            if (randomWordMod === chosenWord.display()) {
                 
                 console.log(chosenWord.display());
                 guesses = 8;
@@ -137,7 +140,7 @@ function winGame() {
                 guessWord();
             }
             else {
-                console.log("You did an amazing job, come back and play again sometime.".blue)
+                console.log("You did an amazing job, come back soon and play again.".blue)
                 process.exit();
             }
         })

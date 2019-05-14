@@ -13,7 +13,7 @@ var Letter = function (character) {
     this.display = function () {
         if (this.character == ' ') {
 
-            return (' ');
+            return ('  '); //extra space to seperate the words better
 
         } else if (this.isLetterGuessed) {
 
@@ -21,7 +21,7 @@ var Letter = function (character) {
 
         } else if (this.isLetterGuessed === false) {
 
-            return ("_");
+            return ("__ "); // added extra line and space for better readability
         }
     }
 
